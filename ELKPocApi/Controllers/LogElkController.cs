@@ -17,11 +17,11 @@ public class LogElkController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ElasticSearchPagedResultDto<LogELKDocument>> Get(ElasticSearchPagedResultRequestDto requestDto)
+    public async Task<ElasticSearchPagedResultDto<LogELKDocument>> Get([FromQuery]ElasticSearchPagedResultRequestDto requestDto)
         => await _logElkService.Get(requestDto);
 
     [HttpGet("{id}")]
-    public async Task<LogELKDocument> GetLog(Guid id)
+    public async Task<LogELKDocument> GetLog([FromRoute]Guid id)
         => await _logElkService.GetLog(id);
 
     [HttpPost]
@@ -29,6 +29,6 @@ public class LogElkController : ControllerBase
         => await _logElkService.Create(new LogELKDocument { Id = Guid.NewGuid(), CreationTime = DateTime.Now });
 
     [HttpDelete]
-    public async Task<bool> Delete(Guid id)
+    public async Task<bool> Delete([FromRoute]Guid id)
         => await _logElkService.Delete(id);
 }
