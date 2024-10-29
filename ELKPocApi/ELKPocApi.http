@@ -1,0 +1,6 @@
+@ELKPocApi_HostAddress = http://localhost:5277
+
+GET {{ELKPocApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
