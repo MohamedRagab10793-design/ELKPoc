@@ -28,7 +28,4 @@ public class LogElkController : ControllerBase
     public async Task<bool> Create()
         => await _logElkService.Create(new LogELKDocument { Id = Guid.NewGuid(), CreationTime = DateTime.Now });
 
-    [HttpDelete]
-    public async Task<bool> Delete([FromRoute]Guid id)
-        => await _logElkService.Delete(id);
 }

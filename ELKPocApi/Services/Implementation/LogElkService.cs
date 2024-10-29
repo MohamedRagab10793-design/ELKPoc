@@ -46,15 +46,5 @@ public class LogElkService : BaseElasticSearchService<LogELKDocument>, ILogElkSe
         var insertResponse = await Insert(document);
         return insertResponse.IsValidResponse;
     }
-    public async Task<bool> Delete(Guid id)
-    {
-        var deleteByQueryRequestDescriptor = new DeleteByQueryRequestDescriptor<LogELKDocument>
-                                            (_defaultIndex)
-                                            .Query(q => q.QueryString(c => c.Query(id.ToString()).DefaultField(c => c.Id)));
-
-        var deleteResponse = await Remove(deleteByQueryRequestDescriptor);
-        return deleteResponse.IsValidResponse;
-    }
-
     #endregion Methods
 }

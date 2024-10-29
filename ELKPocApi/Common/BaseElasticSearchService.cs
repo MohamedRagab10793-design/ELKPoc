@@ -1,5 +1,4 @@
 using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.IndexManagement;
 
 namespace ELKPocApi.Common;
 public class BaseElasticSearchService<T> where T : BaseElasticSearchDocument
@@ -22,11 +21,5 @@ public class BaseElasticSearchService<T> where T : BaseElasticSearchDocument
     protected async Task<IndexResponse> Insert(T t) => await _elasticsearchClient.IndexAsync(t, _defaultIndex);
     protected async Task<BulkResponse> Insert(List<T> list) => await _elasticsearchClient.IndexManyAsync(list, _defaultIndex);
     #endregion Insert
-
-    #region Delete
-    protected async Task<DeleteResponse> Remove(Guid id) => await _elasticsearchClient.DeleteAsync(_defaultIndex, id);
-    protected async Task<DeleteByQueryResponse> Remove(DeleteByQueryRequestDescriptor<T> deleteRequest) => await _elasticsearchClient.DeleteByQueryAsync(deleteRequest);
-    protected async Task<DeleteIndexResponse> RemoveAllDocAtIndex() => await _elasticsearchClient.Indices.DeleteAsync(_defaultIndex);
-    #endregion Delete
 
 }
