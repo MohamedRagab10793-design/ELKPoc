@@ -9,6 +9,7 @@ public class BaseElasticSearchService<T> where T : BaseElasticSearchDocument
     #endregion Props
 
     #region Get
+    //get
     protected async Task<GetResponse<T>> Get(Guid id) => await _elasticsearchClient.GetAsync<T>(_defaultIndex, id);
     protected async Task<SearchResponse<T>> Get(SearchRequestDescriptor<T> descriptor) => await _elasticsearchClient.SearchAsync(descriptor);
     #endregion Get
