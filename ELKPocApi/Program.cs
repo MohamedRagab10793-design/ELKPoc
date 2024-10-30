@@ -1,6 +1,5 @@
-using ELKPocApi.Common;
-using ELKPocApi.Services.Contract;
-using ELKPocApi.Services.Implementation;
+using ELKPocApi;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -8,8 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region Elk
-builder.Services.AddSingleton<IBaseElasticSearchClient, BaseElasticSearchClient>();
-builder.Services.AddScoped<ILogElkService<Guid>, LogElkService>();
+builder.Services.AddElasticSearchConfigurations();
 #endregion Elk
 
 
