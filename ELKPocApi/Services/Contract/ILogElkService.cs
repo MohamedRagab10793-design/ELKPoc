@@ -3,9 +3,9 @@ using ELKPocApi.Documents;
 
 namespace ELKPocApi.Services.Contract;
 
-public interface ILogElkService
+public interface ILogElkService<TKey>
 {
-    Task<ElasticSearchPagedResultDto<LogELKDocument>> Get(ElasticSearchPagedResultRequestDto requestDto);
-    Task<LogELKDocument> GetLog(Guid id);
-    Task<bool> Create(LogELKDocument document);
+    Task<ElasticSearchPagedResultDto<LogDocument, Guid>> Get(ElasticSearchPagedResultRequestDto requestDto);
+    Task<LogDocument> GetLog(TKey id);
+    Task<bool> Create(LogDocument document);
 }

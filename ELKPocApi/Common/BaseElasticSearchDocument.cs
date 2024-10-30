@@ -1,6 +1,6 @@
 namespace ELKPocApi.Common;
-public class BaseElasticSearchDocument
+public class BaseElasticSearchDocument<TKey>
 {
-    public Guid Id { get; set; }
+    public TKey Id { get; set; }
     public DateTime CreationTime { get; set; }
 }

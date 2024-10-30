@@ -1,7 +1,7 @@
 using Elastic.Clients.Elasticsearch;
 
 namespace ELKPocApi.Common;
-public class BaseElasticSearchService<T> where T : BaseElasticSearchDocument
+public class BaseElasticSearchService<T, TKey> where T : BaseElasticSearchDocument<TKey>
 {
     #region Props
     protected string _defaultIndex;
@@ -9,8 +9,7 @@ public class BaseElasticSearchService<T> where T : BaseElasticSearchDocument
     #endregion Props
 
     #region Get
-    //get
-    protected async Task<GetResponse<T>> Get(Guid id) => await _elasticsearchClient.GetAsync<T>(_defaultIndex, id);
+    protected async Task<GetResponse<T>> Get(TKey id) => await _elasticsearchClient.GetAsync<T>(_defaultIndex, id.ToString());
     protected async Task<SearchResponse<T>> Get(SearchRequestDescriptor<T> descriptor) => await _elasticsearchClient.SearchAsync(descriptor);
     #endregion Get
 

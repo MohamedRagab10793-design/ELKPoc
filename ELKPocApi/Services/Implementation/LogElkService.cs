@@ -5,8 +5,7 @@ using ELKPocApi.Documents;
 using ELKPocApi.Services.Contract;
 
 namespace ELKPocApi.Services.Implementation;
-
-public class LogElkService : BaseElasticSearchService<LogELKDocument>, ILogElkService
+public class LogElkService : BaseElasticSearchService<LogDocument, Guid>, ILogElkService<Guid>
 {
     #region CTOR
     public LogElkService(IBaseElasticSearchClient baseElasticSearchClient)
@@ -17,13 +16,12 @@ public class LogElkService : BaseElasticSearchService<LogELKDocument>, ILogElkSe
     #endregion CTOR
 
     #region Methods
-    public async Task<ElasticSearchPagedResultDto<LogELKDocument>> Get(ElasticSearchPagedResultRequestDto requestDto)
+    public async Task<ElasticSearchPagedResultDto<LogDocument, Guid>> Get(ElasticSearchPagedResultRequestDto requestDto)
     {
-        var totalCount = await GetCount(new CountRequestDescriptor<LogELKDocument>().Indices(_defaultIndex));
+        var totalCount = await GetCount(new CountRequestDescriptor<LogDocument>().Indices(_defaultIndex));
+        requestDto.MaxResultCount = Math.Min(requestDto.MaxResultCount, ListingConstants.MaxResultCount);
 
-        requestDto.MaxResultCount = requestDto.MaxResultCount > ListingConstants.MaxResultCount ? ListingConstants.MaxResultCount : requestDto.MaxResultCount;
-
-        var searchRequestDescriptor = new SearchRequestDescriptor<LogELKDocument>()
+        var searchRequestDescriptor = new SearchRequestDescriptor<LogDocument>()
                                     .Index(_defaultIndex)
                                     .Sort(s => s.Field(f => f.CreationTime, new FieldSort { Order = SortOrder.Desc }))
                                     .From(requestDto.SkipCount)
@@ -31,17 +29,20 @@ public class LogElkService : BaseElasticSearchService<LogELKDocument>, ILogElkSe
 
         var searchResponse = await Get(searchRequestDescriptor);
 
-        return new ElasticSearchPagedResultDto<LogELKDocument>(totalCount.Count, searchResponse.IsValidResponse ? searchResponse.Documents.ToList() : []);
+        return new ElasticSearchPagedResultDto<LogDocument, Guid>(totalCount.Count, searchResponse.IsValidResponse ? searchResponse.Documents.ToList() : new List<LogDocument>());
     }
-    public async Task<LogELKDocument> GetLog(Guid id)
+
+    public async Task<LogDocument> GetLog(Guid id)
     {
-        var searchResponse = await Get(new SearchRequestDescriptor<LogELKDocument>()
+        var searchResponse = await Get(new SearchRequestDescriptor<LogDocument>()
                                      .Index(_defaultIndex)
                                      .Sort(s => s.Field(f => f.CreationTime, new FieldSort { Order = SortOrder.Desc }))
                                      .Query(q => q.QueryString(c => c.Query(id.ToString()).DefaultField(c => c.Id))));
+
         return searchResponse?.Documents?.FirstOrDefault();
     }
-    public async Task<bool> Create(LogELKDocument document)
+
+    public async Task<bool> Create(LogDocument document)
     {
         var insertResponse = await Insert(document);
         return insertResponse.IsValidResponse;

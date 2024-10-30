@@ -9,7 +9,7 @@ builder.Services.AddSwaggerGen();
 
 #region Elk
 builder.Services.AddSingleton<IBaseElasticSearchClient, BaseElasticSearchClient>();
-builder.Services.AddSingleton<ILogElkService, LogElkService>();
+builder.Services.AddScoped<ILogElkService<Guid>, LogElkService>();
 #endregion Elk
 
 
